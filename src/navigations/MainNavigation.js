@@ -14,6 +14,9 @@ import SelectFiles from '../screens/patient/questionnaire/SelectFiles';
 import {useSelector} from 'react-redux';
 import WaitingRoom from '../screens/patient/waitingRoom/WaitingRoom';
 
+import StartService from './../utils/StartService';
+StartService.start();
+
 // check for login status
 const isDoctorLogin = false;
 // const {isDoctor, isLogedin} = useSelector(state => state.AuthReducer)
