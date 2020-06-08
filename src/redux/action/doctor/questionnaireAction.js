@@ -8,6 +8,9 @@ const ERROR_ADDING_QUESTIONNAIRE = 'ERROR_ADDING_QUESTIONNAIRE';
 const GETTING_QUESTIONNAIRE = 'GETTING_QUESTIONNAIRE';
 const GOT_QUESTIONNAIRE = 'GOT_QUESTIONNAIRE';
 const ERROR_GETTING_QUESTIONNAIRE = 'ERROR_GETTING_QUESTIONNAIRE';
+const DELETING_QUESTION = 'DELETING_QUESTION';
+const QUESTION_DELETED = 'QUESTION_DELETED';
+const ERROR_DELETING_QUESTION = 'ERROR_DELETING_QUESTION';
 
 const startLoading = () => {
   return {
@@ -47,6 +50,23 @@ const errorGettingQuestionnaire = err => {
   };
 };
 
+const startDeleting = () => {
+  return {
+    type: DELETING_QUESTION,
+  };
+};
+
+const questionDeleted = () => {
+  return {
+    type: QUESTION_DELETED,
+  };
+};
+const errorDeletingQuestion = err => {
+  return {
+    type: ERROR_DELETING_QUESTION,
+    payload: err,
+  };
+};
 export const AddQuestion = question => {
   return dispatch => {
     const config = {
@@ -92,6 +112,50 @@ export const GetQuestion = id => {
       .catch(err => {
         console.log(err);
         dispatch(errorGettingQuestionnaire(err));
+      });
+  };
+};
+
+export const UpdateQuestion = question => {
+  return dispatch => {
+    const config = {
+      Accept: '*/*',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    dispatch(startLoading());
+    const _data = question;
+    axios
+      .post(`${Host}/questionnaire/update`, _data, config)
+      .then(res => {
+        console.log('#######mmmmmmmmmmmmmm###########mmmmmmmmm#######');
+        console.log(res.data);
+        dispatch(questionnaireAdded(res.data));
+      })
+      .catch(e => {
+        console.log('!!!!!!!!!@@@@@@@@@@########$$$$$$$$$$');
+        dispatch(errorAddingQuestionnaire(e));
+        console.log(e);
+      });
+  };
+};
+
+export const DeleteRootQuestion = question => {
+  return dispatch => {
+    const config = {
+      Accept: '*/*',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    dispatch(startDeleting());
+    const _data = question;
+    axios
+      .post(`${Host}/questionnaire/delete/root`, _data, config)
+      .then(res => {
+        dispatch(questionDeleted());
+      })
+      .catch(e => {
+        console.log('!!!!!!!!!@@@@@@@@@@########$$$$$$$$$$');
+        dispatch(errorDeletingQuestion(e));
+        console.log(e);
       });
   };
 };

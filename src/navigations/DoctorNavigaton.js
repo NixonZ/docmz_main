@@ -26,6 +26,7 @@ import {Colors} from '../styles';
 import AddAppointments from '../screens/doctor/AddAppointments/AddAppointments';
 import AddQuestionnaire from '../screens/doctor/AddQuestionnaire/AddQuestionnaire';
 import QuestionnairePP from '../screens/patient/questionnaire/QuestionnairePP';
+import DoctorProfile from '../screens/examples/DoctorProfile/DoctorProfile';
 // import Login from '../screens/examples/Login/Login';
 // import FallBg from '../screens/examples/FallBg/FallBg';
 
@@ -130,8 +131,8 @@ export default createBottomTabNavigator(
       },
     },
     test: {
-      screen: QuestionnairePP,
-      // screen: AtomExample,
+      // screen: QuestionnairePP,
+      screen: DoctorProfile,
       navigationOptions: {
         tabBarIcon: ({focused, tintColor}) => {
           return (
@@ -147,6 +148,7 @@ export default createBottomTabNavigator(
   },
   {
     // tabBarComponent: props => <BottomTabs {...props} />,
+    initialRouteName: 'test',
     order: ['homeScreen', 'chats', 'doctorProfile', 'test'],
     tabBarOptions: {
       showLabel: false,

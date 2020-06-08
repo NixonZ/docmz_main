@@ -10,6 +10,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   AddQuestion,
   GetQuestion,
+  UpdateQuestion,
+  DeleteRootQuestion,
 } from '../../../redux/action/doctor/questionnaireAction';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
 import ExpandableList from '../../../components/molecules/ExpandableList/ExpandableList';
@@ -72,6 +74,13 @@ function AddQuestionnaire() {
   const handleCategoryInput = text => {
     setQuestion({...Question, category: text});
   };
+  const onClickQuestion = question => {
+    const {option} = question;
+    setQuestion(question);
+    console.log('#########################################');
+    console.log(question);
+    setOptions(option);
+  };
   const onSubmit = () => {
     let optionTemp = options.map(item => {
       return {
@@ -87,16 +96,38 @@ function AddQuestionnaire() {
     dispatch(AddQuestion(Fques));
     dispatch(GetQuestion(data.id));
   };
-  const onClickQuestion = question => {
-    const {option} = question;
-
-    console.log(
-      '&&&&&&&%&&&&&&&&&&%%%%%%%%%%%%%&&&&&&&%%%%%%%%%%%%%%%%75555555555',
-    );
-    console.log(question);
-    console.log(option);
-    setQuestion(question);
-    setOptions(option);
+  const onUpdateQuestion = () => {
+    let optionTemp = options.map(item => {
+      return {
+        optionType: item.optionType,
+        text: item.text,
+        linkedQuestion: item.linkedQuestion,
+      };
+    });
+    const {_id, category, specialty, superQuestion, root, title} = Question;
+    console.log(options);
+    let Fques = {
+      category,
+      specialty,
+      superQuestion,
+      root,
+      title,
+      option: JSON.stringify(optionTemp),
+      id: _id,
+    };
+    dispatch(UpdateQuestion(Fques));
+    dispatch(GetQuestion(data.id));
+  };
+  const onDeleteQuestion = () => {
+    const {root, _id} = Question;
+    if (root) {
+      const question = {
+        docId: data.id,
+        questionId: _id,
+      };
+      dispatch(DeleteRootQuestion(question));
+      dispatch(GetQuestion(data.id));
+    }
   };
   const onPressReset = () => {
     setQuestion({
@@ -154,7 +185,6 @@ function AddQuestionnaire() {
               <ActivityIndicator />
             ) : questions.length ? (
               questions.map(item => {
-                console.log('new new new nenwenwenwen wenw en');
                 const linked = item.option.reduce((acc, curr) => {
                   acc.push(...curr.linkedQuestion);
                   return acc;
@@ -164,8 +194,11 @@ function AddQuestionnaire() {
                     key={item._id}
                     name={item.title.slice(0, 20).concat('...')}
                     nestedList={linked}
-                    onPressList={() => onClickQuestion(item)}
+                    onPressList={() => {
+                      onClickQuestion(item);
+                    }}
                     onClickQuestion={onClickQuestion}
+                    option={item.option}
                   />
                 );
               })
@@ -184,6 +217,44 @@ function AddQuestionnaire() {
             optionProp={{options, setOptions, removeOption, addOption}}
             onSubmit={onSubmit}
           />
+          <View
+            style={{
+              flexDirection: 'row',
+              width: '100%',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+            }}>
+            <DmzButton
+              text="Update"
+              onPress={onUpdateQuestion}
+              style={{
+                Container: {
+                  marginTop: 10,
+                  borderRadius: 20,
+                  backgroundColor: 'rgba(20,50,80,1)',
+                  alignSelf: 'center',
+                },
+                Text: {
+                  color: '#fff',
+                },
+              }}
+            />
+            <DmzButton
+              text="Delete"
+              onPress={onDeleteQuestion}
+              style={{
+                Container: {
+                  marginTop: 10,
+                  borderRadius: 20,
+                  backgroundColor: 'rgba(230,50,80,1)',
+                  alignSelf: 'center',
+                },
+                Text: {
+                  color: '#fff',
+                },
+              }}
+            />
+          </View>
           {Question.option.length !== 0 && (
             <AddLinkedOption
               options={Question.option}
@@ -282,7 +353,7 @@ const AddQuestionTemplate = ({
         }}>
         <DmzButton
           onPress={onSubmit}
-          text="Update"
+          text="Add"
           style={{
             Container: {backgroundColor: '#76b434', borderRadius: 20},
             Text: {

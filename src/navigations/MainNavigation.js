@@ -24,8 +24,8 @@ const PageNavigation = createSwitchNavigator(
     doctorHomePage: DoctorNavigation,
   },
   {
-    initialRouteName: isDoctorLogin ? 'doctorHomePage' : 'patientHomePage',
-    // initialRouteName: 'doctorHomePage',
+    // initialRouteName: isDoctorLogin ? 'doctorHomePage' : 'patientHomePage',
+    initialRouteName: 'doctorHomePage',
     headerMode: 'none',
   },
 );

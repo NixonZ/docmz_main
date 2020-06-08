@@ -8,6 +8,7 @@ import {Picker} from '@react-native-community/picker';
 import AnimInput from '../../../components/molecules/AnimInput/AnimInput';
 import RadioGroup from '../../../components/molecules/RadioGroup/RadioGroup';
 import RadioBtn from '../../../components/atoms/RadioBtn/RadioBtn';
+import DmzButton from '../../../components/atoms/DmzButton/DmzButton';
 function QuestionnairePP() {
   const {
     gettingQuestionnaire,
@@ -45,9 +46,6 @@ function QuestionnairePP() {
           paddingVertical: 20,
           paddingHorizontal: 20,
         }}>
-        {/* {questions.map(item => (
-          <Text>{item.title}</Text>
-        ))} */}
         {questions.length !== 0 && <QuestionController questions={questions} />}
       </Container>
     </View>
@@ -56,24 +54,54 @@ function QuestionnairePP() {
 
 export default QuestionnairePP;
 
-const QuestionController = ({questions}) => {
+const QuestionController = ({questions, nested, nextQuestionParent}) => {
   const [count, setCount] = useState(0);
+  const [showContButton, setShowContButton] = useState(false);
   const nextQuestion = () => {
+    setShowContButton(false);
     if (count < questions.length) {
+      const root = questions.every(item => item.root);
+      if (root) {
+        setShowContButton(true);
+      } else {
+        setCount(count + 1);
+      }
+    }
+    if (count === questions.length - 1 && nested) {
+      nextQuestionParent();
       setCount(count + 1);
-      // if(count===questions.length-1){
-      //   nextParent();
-      // }
+    }
+  };
+  const onContinue = () => {
+    if (count < questions.length - 1) {
+      setCount(count + 1);
+      setShowContButton(false);
+    }
+    if (count === questions.length - 1) {
+      alert('answers submited');
     }
   };
 
   return (
-    <QuestionViewer
-      question={questions[count]}
-      nextQuestion={nextQuestion}
-      count={count}
-      questionLength={questions.length}
-    />
+    <>
+      <QuestionViewer question={questions[count]} nextQuestion={nextQuestion} />
+      {showContButton && (
+        <DmzButton
+          text={'Continue'}
+          style={{
+            Container: {
+              backgroundColor: '#257812',
+              elevation: 4,
+              alignSelf: 'center',
+            },
+            Text: {
+              color: '#fafafa',
+            },
+          }}
+          onPress={onContinue}
+        />
+      )}
+    </>
   );
 };
 
@@ -81,6 +109,11 @@ const QuestionViewer = ({question, nextQuestion, count, questionLength}) => {
   const [currentOptionId, setCurrentOptionId] = useState('');
   const [filteredLinkedQuestion, setFilteredLinkedQuestion] = useState([]);
 
+  // useState(() => {
+  //   setFilteredLinkedQuestion([]); //
+  //   ///deal with state,,
+  //   //state is getting persist that's why the previous question is remains on there
+  // }, []);
   const onSetCurrentOptionId = id => {
     setCurrentOptionId(id);
     const OptionQues = question.option.find(item => item._id === id);
@@ -89,10 +122,7 @@ const QuestionViewer = ({question, nextQuestion, count, questionLength}) => {
       nextQuestion();
     }
   };
-  if (count === questionLength) {
-    nextQuestion();
-    console.log('compare wuesflk asdf');
-  }
+
   console.log('&&&&&&&&&@@@@@@@@@@&&&&&&&&&&&&&&&@@@@@@@@@@@@@@@7');
   // console.log(filteredLinkedQuestion);
   return (
@@ -118,7 +148,11 @@ const QuestionViewer = ({question, nextQuestion, count, questionLength}) => {
             return <AnimInput placeholder={item.text} />;
         })}
       {filteredLinkedQuestion.length ? (
-        <QuestionController questions={filteredLinkedQuestion} />
+        <QuestionController
+          questions={filteredLinkedQuestion}
+          nested
+          nextQuestionParent={nextQuestion}
+        />
       ) : null}
       {/* {(() => {
         if (filteredLinkedQuestion.length)
