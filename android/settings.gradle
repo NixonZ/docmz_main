@@ -1,6 +1,8 @@
 rootProject.name = 'docMz_kb'
 include ':react-native-contacts'
 project(':react-native-contacts').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-contacts/android')
+include ':react-native-radial-gradient'
+project(':react-native-radial-gradient').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-radial-gradient/android')
 include ':react-native-image-picker'
 project(':react-native-image-picker').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-picker/android')
 include ':react-native-linear-gradient'

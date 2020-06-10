@@ -27,6 +27,8 @@ import AddAppointments from '../screens/doctor/AddAppointments/AddAppointments';
 import AddQuestionnaire from '../screens/doctor/AddQuestionnaire/AddQuestionnaire';
 import QuestionnairePP from '../screens/patient/questionnaire/QuestionnairePP';
 import DoctorProfile from '../screens/examples/DoctorProfile/DoctorProfile';
+import Settings from '../screens/examples/Settings/Settings';
+import FindADoctor from '../screens/examples/FindADoctor/FindADoctor';
 // import Login from '../screens/examples/Login/Login';
 // import FallBg from '../screens/examples/FallBg/FallBg';
 
@@ -132,7 +134,8 @@ export default createBottomTabNavigator(
     },
     test: {
       // screen: QuestionnairePP,
-      screen: DoctorProfile,
+      // screen: DoctorProfile,
+      screen: FindADoctor,
       navigationOptions: {
         tabBarIcon: ({focused, tintColor}) => {
           return (
@@ -145,11 +148,25 @@ export default createBottomTabNavigator(
         },
       },
     },
+    settings: {
+      screen: Settings,
+      navigationOptions: {
+        tabBarIcon: ({focused, tintColor}) => {
+          return (
+            <MaterialCommunityIcons
+              name="settings"
+              color={focused ? tintColor : '#555'}
+              size={24}
+            />
+          );
+        },
+      },
+    },
   },
   {
     // tabBarComponent: props => <BottomTabs {...props} />,
     initialRouteName: 'test',
-    order: ['homeScreen', 'chats', 'doctorProfile', 'test'],
+    order: ['homeScreen', 'chats', 'doctorProfile', 'test', 'settings'],
     tabBarOptions: {
       showLabel: false,
     },

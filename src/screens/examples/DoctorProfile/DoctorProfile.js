@@ -75,7 +75,7 @@ function DoctorProfile() {
             Gynacologist
           </Text>
           <View style={{alignSelf: 'center', marginTop: 2}}>
-            <RatingStarts rating={4} size={16} filled />
+            <RatingStarts rating={4} size={14} filled />
           </View>
         </Animated.View>
         <Animated.View

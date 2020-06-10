@@ -50,6 +50,7 @@ target 'docMz_kb' do
 
   pod 'react-native-contacts', :path => '../node_modules/react-native-contacts'
 
+
   target 'docMz_kbTests' do
     inherit! :search_paths
     # Pods for testing

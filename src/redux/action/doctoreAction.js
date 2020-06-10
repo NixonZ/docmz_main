@@ -82,20 +82,20 @@ export const resetDoctor = () => {
   };
 };
 
-export const fetchDoctors = () => {
-  return async dispatch => {
-    await dispatch(startDoctorLoading());
-    await axios
-      .get('https://jsonplaceholder.typicode.com/comments')
-      .then(response => {
-        console.log(response);
-        dispatch(setDoctors(response.data));
-      })
-      .catch(err => {
-        dispatch(haveingError(err));
-      });
-  };
-};
+// export const fetchDoctors = () => {
+//   return async dispatch => {
+//     await dispatch(startDoctorLoading());
+//     await axios
+//       .get('https://jsonplaceholder.typicode.com/comments')
+//       .then(response => {
+//         console.log(response);
+//         dispatch(setDoctors(response.data));
+//       })
+//       .catch(err => {
+//         dispatch(haveingError(err));
+//       });
+//   };
+// };
 
 //ex: search: '', page: 1, mode: false
 export const fetchDoctorLite = (search, _page, mode) => {

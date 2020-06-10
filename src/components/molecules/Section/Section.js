@@ -7,7 +7,10 @@ function Section({HeaderText, children, style}) {
     <View style={[Styles.Container, style ? style.Container : null]}>
       <DmzText
         text={HeaderText}
-        style={{fontSize: 22, marginBottom: 15, marginLeft: 25}}
+        style={[
+          {fontSize: 22, marginBottom: 15, marginLeft: 25},
+          style ? style.Text : null,
+        ]}
       />
       {children}
     </View>

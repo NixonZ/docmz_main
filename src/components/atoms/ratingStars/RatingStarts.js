@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
-function RatingStarts({rating, size, filled}) {
+function RatingStarts({rating, activeColor, passiveColor, size, filled}) {
   const ratingStars = (() => {
     let arr = [];
     let i, j;
@@ -11,8 +11,9 @@ function RatingStarts({rating, size, filled}) {
         <FontAwesomeIcon
           key={i}
           name="star"
-          size={size || 12}
-          color="#F4C130"
+          size={size || 11}
+          color={activeColor || '#F4C130'}
+          style={{marginRight: 4}}
         />,
       );
     }
@@ -22,15 +23,15 @@ function RatingStarts({rating, size, filled}) {
           <FontAwesomeIcon
             key={i}
             name="star"
-            size={size || 12}
-            color="#fafafa"
+            size={size || 11}
+            color={passiveColor || '#fafafa'}
           />
         ) : (
           <Icon
             key={i + j}
             name="star"
-            size={(size && size - 2) || 10}
-            color="#F4C130"
+            size={(size && size - 2) || 9}
+            color={passiveColor || '#F4C130'}
           />
         ),
       );

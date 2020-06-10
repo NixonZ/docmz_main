@@ -38,7 +38,6 @@ function FindDoctor() {
           />
           <ToggleButton text="NOW" />
         </FancyHeader>
-
         <Container
           style={{
             height: '75%',
