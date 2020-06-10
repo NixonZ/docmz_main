@@ -109,8 +109,9 @@ export const LoginPatient = (data, success, faild) => {
             email: data.email,
             phone: data.phone,
             name: data.firstName === undefined ? 'No name' : data.firstName,
+            socketid: global.socket.id,
           };
-
+          // send socket id to backend
           dispatch(saveNewUser(_data, 'patient'));
           success({
             status: true,
@@ -144,6 +145,9 @@ export const LoginDoctor = (data, success, faild) => {
       'Content-Type': 'application/x-www-form-urlencoded',
       Accept: '*/*',
     };
+    global.socket.emit('sendID', {
+      email_id: data.email,
+    });
 
     axios
       .post(`${Host}/doctors/authenticate`, data, config)
