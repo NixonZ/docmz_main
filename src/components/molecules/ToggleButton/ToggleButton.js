@@ -16,7 +16,15 @@ if (Platform.OS === 'android') {
     UIManager.setLayoutAnimationEnabledExperimental(true);
   }
 }
-function ToggleButton({text0, text1, style, onToggle, toggle}) {
+function ToggleButton({
+  text0,
+  text1,
+  style,
+  onToggle,
+  toggle,
+  textStyle,
+  dotStyle = {},
+}) {
   const onTouch = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     onToggle();
@@ -31,9 +39,11 @@ function ToggleButton({text0, text1, style, onToggle, toggle}) {
         style ? style : null,
       ]}>
       <TouchableOpacity onPress={onTouch}>
-        <Text style={ToggleButtonStyles.Text}>{toggle ? text0 : text1}</Text>
+        <Text style={[ToggleButtonStyles.Text, textStyle ? textStyle : null]}>
+          {toggle ? text0 : text1}
+        </Text>
       </TouchableOpacity>
-      <ToggleDot />
+      <ToggleDot style={{...dotStyle}} />
     </Animated.View>
   );
 }

@@ -196,6 +196,7 @@ function DocProfileLite({navigation}) {
               </View>
             </View>
           </View>
+
           <ProfilePic
             style={{
               Container: DoctorDetailsScreenStyles.DoctorProfilePic,

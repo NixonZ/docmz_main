@@ -9,7 +9,7 @@ import DoctorScheduleReducer from './doctor/scheduleReducer';
 import MyDoctorReducer from './doctor/myDoctorReducer';
 import questionnaireReducer from './doctor/questionnaireReducer';
 import PatientAccountReducer from './patientAccountReducer';
-
+import themeReducer from './themeReducer';
 const allReducer = combineReducers({
   AuthReducer,
   DataStoreReducer,
@@ -20,6 +20,7 @@ const allReducer = combineReducers({
   MyDoctorReducer,
   PatientAccountReducer,
   questionnaireReducer,
+  themeReducer,
 });
 
 export default allReducer;

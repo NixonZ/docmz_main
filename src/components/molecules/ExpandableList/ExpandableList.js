@@ -25,6 +25,7 @@ const ExpandableList = props => {
     nestedList,
     onPressList,
     onClickQuestion,
+    option,
   } = props;
   const onClick = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);

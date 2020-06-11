@@ -26,6 +26,9 @@ import {Colors} from '../styles';
 import AddAppointments from '../screens/doctor/AddAppointments/AddAppointments';
 import AddQuestionnaire from '../screens/doctor/AddQuestionnaire/AddQuestionnaire';
 import QuestionnairePP from '../screens/patient/questionnaire/QuestionnairePP';
+import DoctorProfile from '../screens/examples/DoctorProfile/DoctorProfile';
+import Settings from '../screens/examples/Settings/Settings';
+import FindADoctor from '../screens/examples/FindADoctor/FindADoctor';
 // import Login from '../screens/examples/Login/Login';
 // import FallBg from '../screens/examples/FallBg/FallBg';
 
@@ -130,8 +133,9 @@ export default createBottomTabNavigator(
       },
     },
     test: {
-      screen: QuestionnairePP,
-      // screen: AtomExample,
+      // screen: QuestionnairePP,
+      // screen: DoctorProfile,
+      screen: FindADoctor,
       navigationOptions: {
         tabBarIcon: ({focused, tintColor}) => {
           return (
@@ -144,10 +148,25 @@ export default createBottomTabNavigator(
         },
       },
     },
+    settings: {
+      screen: Settings,
+      navigationOptions: {
+        tabBarIcon: ({focused, tintColor}) => {
+          return (
+            <MaterialCommunityIcons
+              name="settings"
+              color={focused ? tintColor : '#555'}
+              size={24}
+            />
+          );
+        },
+      },
+    },
   },
   {
     // tabBarComponent: props => <BottomTabs {...props} />,
-    order: ['homeScreen', 'chats', 'doctorProfile', 'test'],
+    initialRouteName: 'test',
+    order: ['homeScreen', 'chats', 'doctorProfile', 'test', 'settings'],
     tabBarOptions: {
       showLabel: false,
     },

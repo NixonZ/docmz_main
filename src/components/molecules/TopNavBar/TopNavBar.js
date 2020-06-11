@@ -71,14 +71,13 @@ const Styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingHorizontal: 8,
   },
   TouchableOpacity: {
     padding: 10,
     borderRadius: 20,
   },
   BackButton: {height: 20},
-  HamburgerButton: {height: 20, width: 20},
+  HamburgerButton: {height: 20, width: 20, marginRight: 5},
 });
 export default TopNavBar;
