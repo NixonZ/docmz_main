@@ -4,6 +4,7 @@ import FancyHeaderLite from '../../../components/organisms/FancyHeaderLite/Fancy
 import Container from '../../../components/organisms/Container/Container';
 import {Image} from 'react-native-animatable';
 import {TouchableOpacity, FlatList} from 'react-native-gesture-handler';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
 const patientQueue = [
   {
@@ -42,7 +43,7 @@ class WaitingRoomN extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timeLeft: 0,
+      timeLeft: 6,
       timerActive: true,
       formFilled: false,
     };
@@ -59,9 +60,9 @@ class WaitingRoomN extends Component {
   }
 
   componentDidUpdate() {
-    if (this.state.timeLeft === 0) {
+    if (this.state.timerActive && this.state.timeLeft === 0) {
       clearInterval(this.timer);
-      this.setState({timerActive: false, timeLeft: -1});
+      this.setState({timerActive: false});
     }
   }
 
@@ -143,20 +144,38 @@ class WaitingRoomN extends Component {
             <Text style={[styles.text, {textAlign: 'center'}]}>
               Approximate time left for your consultation
             </Text>
-            <View style={styles.timer}>
-              {this.state.timerActive ? (
-                <Text style={styles.text}>
-                  {this.renderTime(this.state.timeLeft)}
-                </Text>
-              ) : (
-                <TouchableOpacity>
-                  <Text
-                    style={[styles.text, {textDecorationLine: 'underline'}]}>
-                    Enter
-                  </Text>
-                </TouchableOpacity>
+
+            <AnimatedCircularProgress
+              size={120}
+              width={10}
+              style={{margin: 10}}
+              backgroundWidth={1}
+              fill={(this.state.timeLeft + 0.000001) / 36} //=time/60/60*100
+              tintColor="#6230CC"
+              backgroundColor="#515151"
+              arcSweepAngle={360}
+              rotation={0}
+              lineCap="round">
+              {fill => (
+                <View style={styles.timer}>
+                  {this.state.timerActive ? (
+                    <Text style={styles.text}>
+                      {this.renderTime(this.state.timeLeft)}
+                    </Text>
+                  ) : (
+                    <TouchableOpacity>
+                      <Text
+                        style={[
+                          styles.text,
+                          {textDecorationLine: 'underline'},
+                        ]}>
+                        Enter
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               )}
-            </View>
+            </AnimatedCircularProgress>
           </View>
           {this.state.formFilled ? (
             <View style={styles.nextAppointment}>
@@ -250,11 +269,11 @@ const styles = StyleSheet.create({
   timer: {
     backgroundColor: '#F7C033',
     borderRadius: 50,
-    height: 100,
-    width: 100,
+    height: 94,
+    width: 94,
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
+    margin: 3,
   },
   nextAppointment: {
     // borderWidth: 1,

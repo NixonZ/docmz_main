@@ -29,6 +29,7 @@ import QuestionnairePP from '../screens/patient/questionnaire/QuestionnairePP';
 import DoctorProfile from '../screens/examples/DoctorProfile/DoctorProfile';
 import Settings from '../screens/examples/Settings/Settings';
 import FindADoctor from '../screens/examples/FindADoctor/FindADoctor';
+import WaitingRoomN from '../screens/patient/waitingRoom/WaitingRoomN';
 // import Login from '../screens/examples/Login/Login';
 // import FallBg from '../screens/examples/FallBg/FallBg';
 
@@ -135,7 +136,7 @@ export default createBottomTabNavigator(
     test: {
       // screen: QuestionnairePP,
       // screen: DoctorProfile,
-      screen: FindADoctor,
+      screen: WaitingRoomN,
       navigationOptions: {
         tabBarIcon: ({focused, tintColor}) => {
           return (
