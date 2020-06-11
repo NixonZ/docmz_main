@@ -23,6 +23,13 @@ const pReducer = persistReducer(persistConfig, allReducer);
 const _store = createStore(pReducer, {}, applyMiddleware(thunk, logger));
 const store = persistStore(_store);
 
+import io from 'socket.io-client';
+global.socket = io.connect('http://192.168.1.4:4000', {
+  secure: true,
+  transports: ['websocket'],
+  rejectUnauthorized: false,
+});
+
 export default function Store() {
   return (
     <Provider store={_store}>

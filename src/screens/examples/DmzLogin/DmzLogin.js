@@ -18,7 +18,11 @@ import LoadingButton from '../../../components/atoms/LoadingButton/LoadingButton
 
 function DmzLogin(props) {
   const {loginAs = 'patient'} = props.navigation.state.params;
-  const [data, setData] = useState({email: '', password: ''});
+  const [data, setData] = useState({
+    email: '',
+    password: '',
+    socketID: global.socket.id,
+  });
   const [isDoctor, setDoctor] = useState(false);
   const dispatch = useDispatch();
   const authData = useSelector(state => state.AuthReducer);
