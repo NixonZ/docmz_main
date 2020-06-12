@@ -136,7 +136,7 @@ export default createBottomTabNavigator(
     test: {
       // screen: QuestionnairePP,
       // screen: DoctorProfile,
-      screen: WaitingRoomN,
+      screen: FindADoctor,
       navigationOptions: {
         tabBarIcon: ({focused, tintColor}) => {
           return (
