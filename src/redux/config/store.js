@@ -10,6 +10,7 @@ import {PersistGate} from 'redux-persist/integration/react';
 import AsyncStorage from '@react-native-community/async-storage';
 import Splash from '../../screens/examples/Splash/Splash';
 // import Loading from '../../screens/loading/Loading'
+import RealTimeOnline from '../../utils/RealTimeOnline';
 
 const persistConfig = {
   key: 'primary',
@@ -35,6 +36,7 @@ export default function Store() {
     <Provider store={_store}>
       <PersistGate loading={null} persistor={store}>
         <MainNavigation />
+        <RealTimeOnline />
       </PersistGate>
     </Provider>
   );
