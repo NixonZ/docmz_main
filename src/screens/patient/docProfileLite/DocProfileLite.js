@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, StyleSheet, Text, Animated, ScrollView} from 'react-native';
+import {View, StyleSheet, Text, Animated, ScrollView,Image} from 'react-native';
 import FancyHeader from '../../../components/organisms/FancyHeader/FancyHeader';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -10,7 +10,7 @@ import ConfirmAppointment from '../../../components/molecules/ConfirmAppointment
 import ProfilePic from '../../../components/atoms/ProfilePic/ProfilePic';
 import {useDispatch, useSelector} from 'react-redux';
 import {GettingDoctorProfiles} from '../../../redux/action/doctoreAction';
-
+import VideoCall from '../../../components/molecules/VideoCall/VideoCall';
 import CollapsibleFancyHeader from '../../../components/organisms/CollapsibleFancyHeader/CollapsibleFancyHeader';
 import NavigationActions from 'react-navigation/src/NavigationActions';
 import {AddFevDoc} from '../../../redux/action/patientAccountAction';
@@ -35,7 +35,7 @@ function DocProfileLite({navigation}) {
       console.log('>> authentication.');
       navigation.navigate('authentication', {loginAs: 'patient'});
     } else {
-      // navigation.navigate('ConfirmAppointment', {data: data});
+       //navigation.navigate('ConfirmAppointment', {data: data});
       if (data.toggle === 0) {
         navigation.navigate('question', {data: data});
       } else {
@@ -53,7 +53,15 @@ function DocProfileLite({navigation}) {
       // navigation.navigate('ConfirmAppointment', {data: data})
     }
   };
-
+  const _checkLogedinAndVideoCall = () => {
+    console.log('bug bug ', authData.isLogedin);
+    if (!authData.isLogedin) {
+      console.log('>> authentication.');
+      navigation.navigate('authentication', {loginAs: 'patient'});
+    } else {
+       navigation.navigate('VideoCall', {data: data});
+    }
+  };
   return (
     <View style={DoctorDetailsScreenStyles.Container}>
       {/* <CollapsibleFancyHeader
@@ -220,6 +228,19 @@ function DocProfileLite({navigation}) {
                 },
               }}>
               <MaterialCommunityIcons name="heart" size={28} color="#6231CB" />
+            </BasicCard>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{flex: 2, padding: 5}}
+            onPress={() => _checkLogedinAndVideoCall()}>
+            <BasicCard
+              style={{
+                CardContainer: {
+                  height: '100%',
+                  width: '100%',
+                },
+              }}>
+              <Image style={{height:40,width:40}} source={require('../../../assets/icons/v1.jpg')}/>
             </BasicCard>
           </TouchableOpacity>
           <TouchableOpacity
