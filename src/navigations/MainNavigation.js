@@ -13,7 +13,7 @@ import AllAnswer from '../screens/patient/questionnaire/AllAnswer';
 import SelectFiles from '../screens/patient/questionnaire/SelectFiles';
 import {useSelector} from 'react-redux';
 import WaitingRoom from '../screens/patient/waitingRoom/WaitingRoom';
-
+import VideoCall from '../components/molecules/VideoCall/VideoCall';
 import StartService from './../utils/StartService';
 StartService.start();
 
@@ -42,6 +42,7 @@ const docMainStream = createStackNavigator(
     AppointmentForm,
     ConfirmAppointment,
     AppointmentForm,
+    VideoCall,
     // Questionnaire,
   },
   {
