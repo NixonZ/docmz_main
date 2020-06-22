@@ -30,6 +30,8 @@ import DoctorProfile from '../screens/examples/DoctorProfile/DoctorProfile';
 import Settings from '../screens/examples/Settings/Settings';
 import FindADoctor from '../screens/examples/FindADoctor/FindADoctor';
 import WaitingRoomN from '../screens/patient/waitingRoom/WaitingRoomN';
+import ChatScreen from '../screens/chat/ChatScreen';
+import InChatScreen from '../screens/chat/InChatScreen';
 // import Login from '../screens/examples/Login/Login';
 // import FallBg from '../screens/examples/FallBg/FallBg';
 
@@ -136,7 +138,8 @@ export default createBottomTabNavigator(
     test: {
       // screen: QuestionnairePP,
       // screen: DoctorProfile,
-      screen: FindADoctor,
+      // screen: FindADoctor,
+      screen: InChatScreen,
       navigationOptions: {
         tabBarIcon: ({focused, tintColor}) => {
           return (

@@ -16,7 +16,12 @@ const persistConfig = {
   key: 'primary',
   storage: AsyncStorage,
   whitelist: ['AuthReducer', 'patientAccountReducer'],
-  blacklist: ['QuestionReducer', 'DoctorReducer', 'MyDoctorReducer', 'AuthReducer.isLoading'],
+  blacklist: [
+    'QuestionReducer',
+    'DoctorReducer',
+    'MyDoctorReducer',
+    'AuthReducer.isLoading',
+  ],
 };
 
 const pReducer = persistReducer(persistConfig, allReducer);
@@ -25,7 +30,7 @@ const _store = createStore(pReducer, {}, applyMiddleware(thunk, logger));
 const store = persistStore(_store);
 
 import io from 'socket.io-client';
-global.socket = io.connect('http://192.168.1.4:4000', {
+global.socket = io.connect('http://192.168.0.179:4000', {
   secure: true,
   transports: ['websocket'],
   rejectUnauthorized: false,
