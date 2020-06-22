@@ -7,12 +7,17 @@ export default class InChatScreen extends React.Component {
     messages: [],
   };
 
+  //variables to be passed for chat
+  chatId = 'test';
+  recieverEmail = 'a@a.com';
+  recieverName = 'Dr. Z';
+
   componentDidMount() {
     this.setState({
       messages: [
         {
           _id: 1,
-          text: 'Hello developer',
+          text: 'Hello Patient',
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -20,7 +25,30 @@ export default class InChatScreen extends React.Component {
         },
       ],
     });
-    global.socket.on('recieveMessage', data => {
+    global.socket.on('recieveMessage', this.handleRecievedMessage);
+  }
+
+  componentWillUnmount() {
+    global.socket.off('recieveMessage', this.handleRecievedMessage);
+  }
+
+  onSend(messages = []) {
+    console.log('sending : ' + JSON.stringify(messages));
+    global.socket.emit('sendMessage', {
+      reciever: 'reciever-mail',
+      message: messages[0].text,
+      chatId: 'test',
+      _id: messages[0]._id,
+    });
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, messages),
+    }));
+  }
+
+  handleRecievedMessage = data => {
+    console.log('recieving : ' + JSON.stringify(data));
+    if (data.chatId === this.chatId) {
+      //chat belongs to the chatbox
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, {
           text: data.chat.message,
@@ -31,26 +59,12 @@ export default class InChatScreen extends React.Component {
           },
         }),
       }));
-    });
-  }
-
-  onSend(messages = []) {
-    // console.log(JSON.stringify(messages));
-    global.socket.emit('sendMessage', {
-      reciever: 'reciever-mail',
-      sender: messages[0].user._id,
-      message: messages[0].text,
-      chatId: 'test',
-    });
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-  }
+    } else {
+      //chat doesnt belong here add the recieved messages to unread queue
+    }
+  };
 
   render() {
-    const {params} = this.props.navigation.state;
-    // const username = params.username;
-    const username = 'name';
     return (
       <View style={{flex: 1}}>
         <View
@@ -64,11 +78,10 @@ export default class InChatScreen extends React.Component {
             style={{
               backgroundColor: 'transparent',
               fontSize: 18,
-              color: '#fff',
               marginTop: 30,
               fontFamily: 'monospace',
             }}>
-            {username}
+            {this.recieverName}
           </Text>
         </View>
 
@@ -76,7 +89,7 @@ export default class InChatScreen extends React.Component {
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={{
-            _id: 1,
+            _id: 'sender-mail',
           }}
         />
       </View>
