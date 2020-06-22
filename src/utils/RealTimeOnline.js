@@ -31,7 +31,7 @@ export default function RealTimeOnline() {
         console.log('App has come to the background/inactive');
         console.log('Activity Status --> Offline');
         _captureDate(); //If user is offline, function will capture the date/time
-        global.socket.emit('RemoveUser', data.email);
+        global.socket.emit('RemoveUser');
       }
 
       //User's last online activity

@@ -20,6 +20,18 @@ export default class InChatScreen extends React.Component {
         },
       ],
     });
+    global.socket.on('recieveMessage', data => {
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, {
+          text: data.chat.message,
+          createdAt: data.chat.time,
+          _id: 'abc',
+          user: {
+            _id: data.chat.from,
+          },
+        }),
+      }));
+    });
   }
 
   onSend(messages = []) {
