@@ -25,7 +25,7 @@ export default class InChatScreen extends React.Component {
         messages: GiftedChat.append(previousState.messages, {
           text: data.chat.message,
           createdAt: data.chat.time,
-          _id: 'abc',
+          _id: data.chat._id,
           user: {
             _id: data.chat.from,
           },
@@ -35,7 +35,7 @@ export default class InChatScreen extends React.Component {
   }
 
   onSend(messages = []) {
-    console.log(JSON.stringify(messages));
+    // console.log(JSON.stringify(messages));
     global.socket.emit('sendMessage', {
       reciever: 'reciever-mail',
       sender: messages[0].user._id,
