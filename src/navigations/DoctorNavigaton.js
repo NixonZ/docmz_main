@@ -141,7 +141,7 @@ export default createBottomTabNavigator(
       // screen: DoctorProfile,
       // screen: FindADoctor,
       // screen: ChatNavigation,
-      screen: ChatScreen,
+      screen: InChatScreen,
       navigationOptions: {
         tabBarIcon: ({focused, tintColor}) => {
           return (
