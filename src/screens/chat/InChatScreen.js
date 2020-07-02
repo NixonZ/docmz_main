@@ -1,11 +1,16 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, AsyncStorage} from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat';
+import {connect, useDispatch} from 'react-redux';
+import {_ReadMessage} from '../../redux/action/chatAction';
 
-export default class InChatScreen extends React.Component {
-  state = {
-    messages: [],
-  };
+class InChatScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      messages: [],
+    };
+  }
 
   //variables to be passed for chat
   chatId = 'test';
@@ -13,23 +18,21 @@ export default class InChatScreen extends React.Component {
   recieverName = 'Dr. Z';
 
   componentDidMount() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: 'Hello Patient',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-          },
-        },
-      ],
-    });
-    global.socket.on('recieveMessage', this.handleRecievedMessage);
+    AsyncStorage.getItem(this.chatId)
+      .then(data => {
+        // console.log(data);
+        if (data != null) this.setState({messages: JSON.parse(data)});
+      })
+      .catch(err => console.log(err));
   }
 
   componentWillUnmount() {
-    global.socket.off('recieveMessage', this.handleRecievedMessage);
+    AsyncStorage.setItem(
+      this.chatId,
+      JSON.stringify([...this.state.messages, ...this.props.chatData]),
+    );
+
+    this.props.dispatch(_ReadMessage(this.chatId));
   }
 
   onSend(messages = []) {
@@ -39,30 +42,12 @@ export default class InChatScreen extends React.Component {
       message: messages[0].text,
       chatId: 'test',
       _id: messages[0]._id,
+      time: messages[0].createdAt,
     });
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
   }
-
-  handleRecievedMessage = data => {
-    console.log('recieving : ' + JSON.stringify(data));
-    if (data.chatId === this.chatId) {
-      //chat belongs to the chatbox
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, {
-          text: data.chat.message,
-          createdAt: data.chat.time,
-          _id: data.chat._id,
-          user: {
-            _id: data.chat.from,
-          },
-        }),
-      }));
-    } else {
-      //chat doesnt belong here add the recieved messages to unread queue
-    }
-  };
 
   render() {
     return (
@@ -86,7 +71,14 @@ export default class InChatScreen extends React.Component {
         </View>
 
         <GiftedChat
-          messages={this.state.messages}
+          messages={GiftedChat.append(
+            this.state.messages,
+            this.props.chatData,
+          ).sort((a, b) => {
+            const time1 = new Date(a.createdAt);
+            const time2 = new Date(b.createdAt);
+            return time2 - time1;
+          })}
           onSend={messages => this.onSend(messages)}
           user={{
             _id: 'sender-mail',
@@ -97,4 +89,13 @@ export default class InChatScreen extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({});
+function mapStateToProps(state, ownProps) {
+  ownProps.chatId = 'test'; //testing
+  return {
+    chatData: state.chatReducer[ownProps.chatId]
+      ? [...state.chatReducer[ownProps.chatId]]
+      : [],
+  };
+}
+
+export default connect(mapStateToProps)(InChatScreen);

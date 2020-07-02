@@ -7,22 +7,19 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import {connect} from 'react-redux';
 
-export default class ChatScreen extends React.Component {
+class ChatScreen extends React.Component {
   state = {
     chats: [
-      {name: 'Group #1', group: true},
-      {name: 'Group #2', group: true},
-      {name: 'Group #3', group: true},
-      {name: 'Group #4', group: true},
-      {name: 'Friend #1', group: false},
-      {name: 'Friend #2', group: false},
-      {name: 'Friend #3', group: false},
-      {name: 'Friend #4', group: false},
-      {name: 'Friend #5', group: false},
-      {name: 'Friend #6', group: false},
-      {name: 'Friend #7', group: false},
-      {name: 'Friend #8', group: false},
+      {name: 'Friend #1', group: false, email: 'a@a.com', chatId: 'test'},
+      {name: 'Friend #2', group: false, email: 'a@a.com', chatId: 'a'},
+      {name: 'Friend #3', group: false, email: 'a@a.com', chatId: 'b'},
+      {name: 'Friend #4', group: false, email: 'a@a.com', chatId: 'c'},
+      {name: 'Friend #5', group: false, email: 'a@a.com', chatId: 'd'},
+      {name: 'Friend #6', group: false, email: 'a@a.com', chatId: 'e'},
+      {name: 'Friend #7', group: false, email: 'a@a.com', chatId: 'f'},
+      {name: 'Friend #8', group: false, email: 'a@a.com', chatId: 'g'},
     ],
   };
 
@@ -40,7 +37,6 @@ export default class ChatScreen extends React.Component {
             style={{
               backgroundColor: 'transparent',
               fontSize: 18,
-              color: '#fff',
               marginTop: 30,
               fontFamily: 'monospace',
             }}>
@@ -51,67 +47,57 @@ export default class ChatScreen extends React.Component {
         <FlatList
           data={this.state.chats}
           nestedScrollEnabled
-          keyExtractor={name => this.state.chats.name}
+          keyExtractor={item => item.chatId}
           renderItem={({item}) => {
-            if (item.group) {
-              return (
-                <View style={{margin: 0, height: 70}}>
-                  {
-                    <TouchableOpacity
-                      onPress={() =>
-                        this.props.navigation.navigate('InChat', {
-                          username: item.name,
-                        })
-                      }>
-                      <View style={{flexDirection: 'row', padding: 4}}>
-                        <Text
-                          style={{
-                            fontFamily: 'monospace',
-                            alignSelf: 'center',
-                            marginLeft: 20,
-                            color: '#444484',
-                            fontSize: 16,
-                          }}>
-                          {item.name}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  }
-                </View>
-              );
-            } else {
-              return (
-                <View style={{margin: 0, height: 70}}>
-                  {
-                    <TouchableOpacity
-                      onPress={() =>
-                        this.props.navigation.navigate('InChat', {
-                          username: item.name,
-                        })
-                      }>
-                      <View style={{flexDirection: 'row', padding: 4}}>
-                        <Text
-                          style={{
-                            fontFamily: 'monospace',
-                            alignSelf: 'center',
-                            marginLeft: 20,
-                            color: '#444484',
-                            fontSize: 16,
-                          }}>
-                          {item.name}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  }
-                </View>
-              );
-            }
+            return (
+              <View style={{margin: 0, height: 70}}>
+                {
+                  <TouchableOpacity>
+                    {/* onPress={() =>
+                      this.props.navigation.navigate('InChat', {
+                        recieverData: item,
+                      })
+                    }> */}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        padding: 4,
+                        justifyContent: 'space-between',
+                      }}>
+                      <Text
+                        style={{
+                          fontFamily: 'monospace',
+                          alignSelf: 'center',
+                          marginLeft: 20,
+                          color: '#444484',
+                          fontSize: 16,
+                        }}>
+                        {item.name}
+                      </Text>
+                      <Text>{this.props.unreadMessages[item.chatId] ?? 0}</Text>
+                    </View>
+                  </TouchableOpacity>
+                }
+              </View>
+            );
           }}
         />
       </View>
     );
   }
 }
+
+function mapStateToProps(state) {
+  var unreadMessages = {...state.chatReducer};
+  Object.keys(unreadMessages).forEach(
+    chatId => (unreadMessages[chatId] = unreadMessages[chatId]?.length ?? 0),
+  );
+  return {
+    unreadMessages,
+  };
+}
+
+export default connect(mapStateToProps)(ChatScreen);
 
 const styles = StyleSheet.create({
   circle: {

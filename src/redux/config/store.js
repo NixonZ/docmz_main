@@ -15,7 +15,7 @@ import RealTimeOnline from '../../utils/RealTimeOnline';
 const persistConfig = {
   key: 'primary',
   storage: AsyncStorage,
-  whitelist: ['AuthReducer', 'patientAccountReducer'],
+  whitelist: ['AuthReducer', 'patientAccountReducer', 'chatReducer'],
   blacklist: [
     'QuestionReducer',
     'DoctorReducer',
