@@ -21,6 +21,7 @@ function AnimInput(props) {
     textContentType,
     placeholder,
     keyboardType = 'default',
+    secureText = false,
     withAnim = true,
     style,
     inputHandler = () => {},
@@ -28,7 +29,7 @@ function AnimInput(props) {
   } = props;
 
   useEffect(() => {
-    value && setInputText(value);
+    value && setssInputText(value);
     value && onFocus();
   });
   const onFocus = () => {
@@ -93,6 +94,7 @@ function AnimInput(props) {
       <TextInput
         textContentType={textContentType}
         placeholder={withAnim ? '' : placeholder}
+        secureTextEntry={secureText}
         keyboardType={keyboardType}
         style={customInputStyle}
         onFocus={onFocus}

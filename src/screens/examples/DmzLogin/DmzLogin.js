@@ -160,6 +160,7 @@ function DmzLogin(props) {
           }}>
           <AnimInput
             withAnim={false}
+            secureText={true}
             placeholder="Password"
             style={{
               Container: {borderBottomWidth: 0},

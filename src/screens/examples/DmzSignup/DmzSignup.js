@@ -295,6 +295,7 @@ function DmzSignup(props) {
           }}>
           <AnimInput
             withAnim={false}
+            secureText={true}
             placeholder="Password"
             style={{Container: {borderBottomWidth: 0, height: 40}}}
             inputHandler={handelPasswordChange}
