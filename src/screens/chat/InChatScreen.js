@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, AsyncStorage, Image} from 'react-native';
-import {connect, useDispatch} from 'react-redux';
+import {connect} from 'react-redux';
 import {_ReadMessage} from '../../redux/action/chatAction';
 import {
   GiftedChat,
@@ -15,6 +15,9 @@ import AudioRecord from 'react-native-audio-record';
 import {PERMISSIONS, request, check} from 'react-native-permissions';
 import TrackPlayer from 'react-native-track-player';
 import RNFetchBlob from 'rn-fetch-blob';
+import axios from 'axios';
+import {Host} from '../../utils/connection';
+import {uniqueId} from 'lodash';
 
 class InChatScreen extends React.Component {
   constructor(props) {
@@ -120,96 +123,75 @@ class InChatScreen extends React.Component {
     console.log('sending : ' + JSON.stringify(messages));
     global.socket.emit('sendMessage', {
       reciever: this.recieverEmail,
-      message: messages[0].text,
+      message: messages[0].text ?? '',
       chatId: this.chatId,
       _id: messages[0]._id,
       time: messages[0].createdAt,
+      image: messages[0].image ?? '',
     });
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
   };
 
-  _getPhotoLibrary = async () => {
+  _uploadMedia = async (response, type) => {
+    console.log('image selected:  ' + JSON.stringify(response));
+
+    try {
+      var formData = new FormData();
+      formData.append('chatId', this.chatId);
+      formData.append('files', {
+        uri: response.uri,
+        type: response.type,
+        name: type === 'image' ? response.fileName : response.name,
+      });
+      const uploadRes = await axios.post(`${Host}/chat/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      // console.log(uploadRes.data);
+      this.onSend([
+        {
+          _id: uniqueId(),
+          createdAt: Date.now(),
+          image: type === 'image' ? Host + '/' + uploadRes.data[0].path : '',
+          text: type === 'document' ? Host + '/' + uploadRes.data[0].path : '',
+          user: {
+            _id: this.senderEmail,
+          },
+        },
+      ]);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  _getPhotoLibrary = () => {
     console.log('call');
     try {
       const options = {
         title: 'Upload Photo',
-        cancelButtonTitle: 'Cancel',
-        takePhotoButtonTitle: 'Take Photo...',
-        chooseFromLibraryButtonTitle: 'Choose from Library...',
-
+        noData: true,
         mediaType: 'photo',
       };
-      ImagePicker.launchImageLibrary(options, response => {
-        this.setState(previousState => ({
-          messages: GiftedChat.append(previousState.messages, {
-            _id: 2,
-            text: '',
-            createdAt: new Date(),
-            user: {
-              _id: this.senderEmail,
-            },
-            image: response.uri,
-          }),
-        }));
-      });
+      ImagePicker.launchImageLibrary(options, res =>
+        this._uploadMedia(res, 'image'),
+      );
     } catch (e) {
       console.log(e);
     }
   };
 
-  _uploadImage = async document => {
-    try {
-      await RNFetchBlob.fetch(
-        'POST',
-        'https://chatapptask.000webhostapp.com/api/fileUploadApi.php',
-        {
-          'Content-Type': 'multipart/form-data',
-        },
-        [
-          {
-            name: 'file_attachment',
-            filename: document.name,
-            type: document.type,
-            data: RNFetchBlob.wrap(document.uri),
-          },
-        ],
-      ).then(res => console.log('REsponse', res));
-
-      console.log(document.name);
-      const BASE_URL = `https://chatapptask.000webhostapp.com/api/uploads/`;
-      const fname = document.name;
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, {
-          _id: 2,
-          text: BASE_URL + fname,
-          createdAt: new Date(),
-          user: {
-            _id: this.senderEmail,
-          },
-          image: '',
-          audio: '',
-        }),
-      }));
-    } catch (e) {
-      console.log('err', e);
-    }
-  };
-
-  _getCamera = async () => {
+  _getCamera = () => {
     try {
       const options = {
         title: 'Upload Photo',
-        cancelButtonTitle: 'Cancel',
-        takePhotoButtonTitle: 'Take Photo...',
-        chooseFromLibraryButtonTitle: 'Choose from Library...',
-
+        noData: true,
         mediaType: 'photo',
       };
       ImagePicker.launchCamera(options, response => {
-        console.log('Response = ', response);
-
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.error) {
@@ -217,17 +199,7 @@ class InChatScreen extends React.Component {
         } else if (response.customButton) {
           console.log('User tapped custom button: ', response.customButton);
         } else {
-          this.setState(previousState => ({
-            messages: GiftedChat.append(previousState.messages, {
-              _id: 2,
-              text: '',
-              createdAt: new Date(),
-              user: {
-                _id: this.senderEmail,
-              },
-              image: response.uri,
-            }),
-          }));
+          this._uploadMedia(response, 'image');
         }
       });
     } catch (e) {
@@ -247,7 +219,7 @@ class InChatScreen extends React.Component {
       console.log('File Size : ' + res.size);
       if (!res.cancelled) {
         try {
-          this._uploadImage(res);
+          this._uploadMedia(res, 'document');
         } catch (e) {
           console.log(e);
         }

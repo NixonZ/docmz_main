@@ -65,13 +65,14 @@ const _removeMessageListener = () => {
 
 const _handleMessageRecieve = data => {
   console.log('message recieved');
-  message = {
-    text: data.chat.message,
+  const message = {
+    text: data.chat.message ?? '',
     createdAt: data.chat.time,
     _id: data.chat._id,
     user: {
       _id: data.chat.from,
     },
+    image: data.chat.image ?? '',
   };
   dispatch(_NewMessage(data.chatId, message));
 };
