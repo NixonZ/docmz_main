@@ -1,5 +1,12 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {View, StyleSheet, Text, Animated, ScrollView,Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Animated,
+  ScrollView,
+  Image,
+} from 'react-native';
 import FancyHeader from '../../../components/organisms/FancyHeader/FancyHeader';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -35,7 +42,7 @@ function DocProfileLite({navigation}) {
       console.log('>> authentication.');
       navigation.navigate('authentication', {loginAs: 'patient'});
     } else {
-       //navigation.navigate('ConfirmAppointment', {data: data});
+      //navigation.navigate('ConfirmAppointment', {data: data});
       if (data.toggle === 0) {
         navigation.navigate('question', {data: data});
       } else {
@@ -59,9 +66,27 @@ function DocProfileLite({navigation}) {
       console.log('>> authentication.');
       navigation.navigate('authentication', {loginAs: 'patient'});
     } else {
-       navigation.navigate('VideoCall', {data: data});
+      navigation.navigate('VideoCall', {data: data});
     }
   };
+
+  const _startChat = () => {
+    navigation.navigate({
+      routeName: 'Chat',
+      action: NavigationActions.navigate({
+        routeName: 'InChatScreen',
+        params: {
+          recieverData: {
+            name: 'Doctor Z',
+            group: false,
+            email: 'a@a.com',
+            chatId: 'test3',
+          },
+        },
+      }),
+    });
+  };
+
   return (
     <View style={DoctorDetailsScreenStyles.Container}>
       {/* <CollapsibleFancyHeader
@@ -230,6 +255,10 @@ function DocProfileLite({navigation}) {
               <MaterialCommunityIcons name="heart" size={28} color="#6231CB" />
             </BasicCard>
           </TouchableOpacity>
+          {/* unformatted chat button */}
+          <TouchableOpacity onPress={_startChat}>
+            <Text>Chat</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             style={{flex: 2, padding: 5}}
             onPress={() => _checkLogedinAndVideoCall()}>
@@ -240,7 +269,10 @@ function DocProfileLite({navigation}) {
                   width: '100%',
                 },
               }}>
-              <Image style={{height:40,width:40}} source={require('../../../assets/icons/v1.jpg')}/>
+              <Image
+                style={{height: 40, width: 40}}
+                source={require('../../../assets/icons/v1.jpg')}
+              />
             </BasicCard>
           </TouchableOpacity>
           <TouchableOpacity

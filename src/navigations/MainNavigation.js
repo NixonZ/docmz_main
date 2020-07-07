@@ -15,6 +15,8 @@ import {useSelector} from 'react-redux';
 import WaitingRoom from '../screens/patient/waitingRoom/WaitingRoom';
 import VideoCall from '../components/molecules/VideoCall/VideoCall';
 import StartService from './../utils/StartService';
+import Chat from './ChatNavigation';
+
 StartService.start();
 
 // check for login status
@@ -27,8 +29,8 @@ const PageNavigation = createSwitchNavigator(
     doctorHomePage: DoctorNavigation,
   },
   {
-    // initialRouteName: isDoctorLogin ? 'doctorHomePage' : 'patientHomePage',
-    initialRouteName: 'doctorHomePage',
+    initialRouteName: isDoctorLogin ? 'doctorHomePage' : 'patientHomePage',
+    // initialRouteName: 'doctorHomePage',
     headerMode: 'none',
   },
 );
@@ -43,6 +45,7 @@ const docMainStream = createStackNavigator(
     ConfirmAppointment,
     AppointmentForm,
     VideoCall,
+    Chat,
     // Questionnaire,
   },
   {

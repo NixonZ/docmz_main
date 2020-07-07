@@ -2,11 +2,15 @@ import {useEffect, useState} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 
 import moment from 'moment';
-import {AppState} from 'react-native';
+import {AppState, AsyncStorage} from 'react-native';
 
-import {_NewMessage} from '../redux/action/chatAction';
+import {_NewMessage, _NewMessageMultiple} from '../redux/action/chatAction';
+
+import axios from 'axios';
+import {Host} from '../utils/connection';
 
 var dispatch = null;
+const chatIds = ['test3']; //get this list from the user store
 
 export default function RealTimeOnline() {
   const [lastSeen, SetlastSeen] = useState(
@@ -35,6 +39,8 @@ export default function RealTimeOnline() {
       console.log('Activity Status --> Offline');
       _captureDate(); //If user is offline, function will capture the date/time
       global.socket.emit('RemoveUser');
+      console.log('storing timestamp: ' + moment());
+      AsyncStorage.setItem('timestamp', JSON.stringify(moment()));
     }
 
     //User's last online activity
@@ -45,6 +51,7 @@ export default function RealTimeOnline() {
     AppState.addEventListener('change', _handleAppStateChange);
     _handleAppStateChange(AppState.currentState);
     _setMessageListener();
+    _fetchNewMessages();
 
     return function cleanup() {
       AppState.removeEventListener('change', _handleAppStateChange);
@@ -75,4 +82,21 @@ const _handleMessageRecieve = data => {
     image: data.chat.image ?? '',
   };
   dispatch(_NewMessage(data.chatId, message));
+};
+
+_fetchNewMessages = async () => {
+  try {
+    const rawTimestamp = await AsyncStorage.getItem('timestamp');
+    const timestamp = moment(JSON.parse(rawTimestamp ?? 0));
+    console.log('timestamp : ' + timestamp);
+
+    const res = await axios.post(`${Host}/chat/getChat`, {
+      chatIds,
+      timestamp,
+    });
+    console.log(res.data);
+    dispatch(_NewMessageMultiple(res.data));
+  } catch (err) {
+    console.log('Fetch error : ' + err);
+  }
 };

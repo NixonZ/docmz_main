@@ -14,6 +14,15 @@ const chatReducer = (state = initialState, action) => {
       newState[action.chatId] = [];
       return newState;
 
+    case 'ADD_MULTIPLE_MESSAGE':
+      newState = {...state};
+      Object.keys(action.payload).forEach(chatId => {
+        if (newState[chatId] === undefined) newState[chatId] = [];
+        // newState[chatId].push(...action.payload[chatId]);
+        newState[chatId] = [...newState[chatId], ...action.payload[chatId]];
+      });
+      return newState;
+
     default:
       return state;
   }

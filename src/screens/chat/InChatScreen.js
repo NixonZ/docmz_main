@@ -27,13 +27,15 @@ class InChatScreen extends React.Component {
       hasCameraPermission: null,
       modalVisible: true,
     };
+    console.log('constructor loaded');
+    //variables to be passed for chat
+    this.chatId = props.navigation.state.params.recieverData.chatId ?? 'test';
+    this.recieverEmail =
+      props.navigation.state.params.recieverData.email ?? 'a@a.com';
+    this.recieverName =
+      props.navigation.state.params.recieverData.name ?? 'Dr. Z';
+    this.senderEmail = 'nomail';
   }
-
-  //variables to be passed for chat
-  chatId = 'test';
-  recieverEmail = 'a@a.com';
-  recieverName = 'Dr. Z';
-  senderEmail = 'sender-email';
 
   async componentDidMount() {
     request(
@@ -75,6 +77,10 @@ class InChatScreen extends React.Component {
   }
 
   render() {
+    console.log(
+      'no of messages' +
+        (this.state.messages.length + this.props.chatData.length),
+    );
     return (
       <View style={{flex: 1}}>
         <View
@@ -151,13 +157,17 @@ class InChatScreen extends React.Component {
         },
       });
 
-      // console.log(uploadRes.data);
+      var path = uploadRes.data[0].path.split('/');
+      path.shift();
+      path = path.join('/');
+      // console.log(path);
+
       this.onSend([
         {
           _id: uniqueId(),
           createdAt: Date.now(),
-          image: type === 'image' ? Host + '/' + uploadRes.data[0].path : '',
-          text: type === 'document' ? Host + '/' + uploadRes.data[0].path : '',
+          image: type === 'image' ? Host + '/' + path : '',
+          text: type === 'document' ? Host + '/' + path : '',
           user: {
             _id: this.senderEmail,
           },
@@ -427,11 +437,13 @@ class InChatScreen extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  ownProps.chatId = 'test'; //testing
+  const chatId =
+    ownProps.navigation?.state?.params?.recieverData?.chatId ?? 'test';
+
+  console.log(state.chatReducer[chatId]);
+  // console.log(chatId);
   return {
-    chatData: state.chatReducer[ownProps.chatId]
-      ? [...state.chatReducer[ownProps.chatId]]
-      : [],
+    chatData: state.chatReducer[chatId] ? [...state.chatReducer[chatId]] : [],
   };
 }
 

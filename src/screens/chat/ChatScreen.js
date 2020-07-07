@@ -12,7 +12,7 @@ import {connect} from 'react-redux';
 class ChatScreen extends React.Component {
   state = {
     chats: [
-      {name: 'Friend #1', group: false, email: 'a@a.com', chatId: 'test'},
+      {name: 'Friend #1', group: false, email: 'a@a.com', chatId: 'test2'},
       {name: 'Friend #2', group: false, email: 'a@a.com', chatId: 'a'},
       {name: 'Friend #3', group: false, email: 'a@a.com', chatId: 'b'},
       {name: 'Friend #4', group: false, email: 'a@a.com', chatId: 'c'},
@@ -52,12 +52,12 @@ class ChatScreen extends React.Component {
             return (
               <View style={{margin: 0, height: 70}}>
                 {
-                  <TouchableOpacity>
-                    {/* onPress={() =>
-                      this.props.navigation.navigate('InChat', {
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('InChatScreen', {
                         recieverData: item,
                       })
-                    }> */}
+                    }>
                     <View
                       style={{
                         flexDirection: 'row',
